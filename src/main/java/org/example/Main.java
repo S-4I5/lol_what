@@ -15,11 +15,12 @@ enum Field{
     STOCK_COUNT,
     PARTNER_CONTENT
 }
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 class Offer {
     @JsonProperty("id")
-    private int id;
+    private String id;
     @JsonProperty("price")
     private int price;
     @JsonProperty("stock_count")
@@ -27,7 +28,7 @@ class Offer {
     @JsonProperty("partner_content")
     private PartnerContent partnerContent;
 
-    public Offer(int id, int price, int stockCount, String title, String description) {
+    public Offer(String id, int price, int stockCount, String title, String description) {
         this.id = id;
         this.price = price;
         this.stockCount = stockCount;
@@ -76,7 +77,7 @@ class Offer {
         return updateFields;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -91,13 +92,14 @@ class Offer {
     public PartnerContent getPartnerContent() {
         return partnerContent;
     }
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private class PartnerContent{
-        @JsonProperty("title")
-        public String title;
         @JsonProperty("description")
         public String description;
+        @JsonProperty("title")
+        public String title;
 
         public PartnerContent() {
         }
@@ -134,23 +136,15 @@ class SubscriberService {
 @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 class TracerOffer{
     @JsonProperty("trace_id")
-    private int trace_id;
+    private String trace_id;
     @JsonProperty("offer")
     private Offer offer;
 
     public TracerOffer() {
     }
 
-    @Override
-    public String toString() {
-        return "TracerOffer{" +
-                "trace_id=" + trace_id +
-                ", offer=" + offer +
-                '}';
-    }
-
     public TracerOffer(String trace_id, Offer offer) {
-        this.trace_id = Integer.parseInt(trace_id);
+        this.trace_id = trace_id;
         this.offer = offer;
     }
 
@@ -186,7 +180,7 @@ class Service{
             boolean contains = false;
 
             for (int i = 0; i < offers.size(); i++) {
-                if(offers.get(i).getId() == newOffer.getId()){
+                if(offers.get(i).getId().equals(newOffer.getId())){
                     updatedFields = offers.get(i).update(newOffer);
                     newOffer = offers.get(i);
                     contains = true;
@@ -214,16 +208,14 @@ class Service{
                         });
 
                         try {
-
                             System.out.println(mapper.writeValueAsString(object));
-
                         } catch (JsonProcessingException e) {
                             throw new RuntimeException(e);
                         }
                     });
         }
         catch (JsonProcessingException e){
-            throw new RuntimeException();
+            System.out.println(input);
         }
     }
 }

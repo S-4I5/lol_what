@@ -7,10 +7,10 @@ class DataCentre{
     public final boolean[] servers;
     private int running;
 
-    DataCentre(int numberOfServers) {
-        this.servers = new boolean[numberOfServers];
-        Arrays.fill(servers, true);
+    DataCentre(int numberOfServers, boolean[] input) {
+        this.servers = input;
         running = numberOfServers;
+        numberOfReloads = 0;
     }
 
     public void reset(){
@@ -27,7 +27,6 @@ class DataCentre{
     }
 
     public int RxA(){
-        if(numberOfReloads == 0) return running;
         return numberOfReloads * running;
     }
 }
@@ -57,8 +56,9 @@ public class First {
         int numOfCommands = in.nextInt();
 
         ArrayList<DataCentre> dataCentres = new ArrayList<>();
+
         for (int i = 0; i < numOfDC; i++) {
-            dataCentres.add(new DataCentre(numOfServers));
+            //dataCentres.add();
         }
 
         for (int i = 0; i < numOfCommands; i++) {
